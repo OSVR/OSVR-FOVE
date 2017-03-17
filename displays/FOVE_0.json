@@ -1,0 +1,47 @@
+{
+	"meta": {
+		"schemaVersion": 1
+	},
+	"hmd": {
+		"device": {
+			"vendor": "FOVE",
+			"model": "FOVE 0",
+			"num_displays": 1,
+			"Version": "",
+			"Note": ""
+		},
+		"field_of_view": {
+			"monocular_horizontal": 85,
+			"monocular_vertical": 90,
+			"overlap_percent": 100,
+			"pitch_tilt": 0
+		},
+		"resolutions": [{
+			"width": 2560,
+			"height": 1440,
+			"video_inputs": 1,
+			"display_mode": "horz_side_by_side",
+			"swap_eyes": 0
+		}],
+		"distortion": {
+			"distance_scale_x": 1,
+			"distance_scale_y": 1,
+			"polynomial_coeffs_red": [0.000131883211084477, 0.998125642830053, -0.027598482499288, 0.533409744126731, -0.663555374696918, 0.571735111391536],
+			"polynomial_coeffs_green": [0.000147348291245675, 0.996169445905723, -0.0403047666238887, 0.552432867184262, -0.672525292782121, 0.560245718395732],
+			"polynomial_coeffs_blue": [0.000220855676920172, 1.00071339710223, -0.0308392996721483, 0.569912689803776, -0.731739864936813, 0.6194540647619]
+		},
+		"rendering": {
+			"right_roll": 0,
+			"left_roll": 0
+		},
+		"eyes": [{
+			"center_proj_x": 0.5,
+			"center_proj_y": 0.5,
+			"rotate_180": 0
+		}, {
+			"center_proj_x": 0.5,
+			"center_proj_y": 0.5,
+			"rotate_180": 0
+		}]
+	}
+}
