@@ -1,0 +1,22 @@
+{
+	"deviceVendor": "FOVE",
+	"deviceName": "Fove Head Tracker Plugin",
+	"author": "FOVE",
+	"version": 1,
+	"lastModified": "Now",
+	"interfaces": {
+		"tracker": {
+			"count": 1,
+			"position": true,
+			"orientation": true
+		}
+	},
+	"semantic": {
+		"hmd": {
+			"$target": "tracker/0"
+		}
+	},
+	"automaticAliases": {
+		"/me/head": "semantic/hmd"
+	}
+}
