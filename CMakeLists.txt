@@ -4,10 +4,6 @@ project(Fove_OSVR_plugin)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-set(CMAKE_CXX_STANDARD 14)
-add_definitions(-DUNICODE)
-
-
 # Find OSVR
 # Add default OSVR paths just to increase the chance things work by default
 # If OSVR can't be found, the user can point to the osvr/cmake dir from cmake
@@ -17,26 +13,22 @@ endif()
 find_package(osvr REQUIRED)
 find_package(FOVE REQUIRED)
 
-osvr_convert_json(com_osvr_FOVE_eye_tracking_config_json
-    eye_tracking_config.json
-    "${CMAKE_CURRENT_BINARY_DIR}/com_osvr_FOVE_eye_tracking_config_json.h")
+osvr_convert_json(com_osvr_fove_eyetracker_json
+    com_osvr_fove_eyetracker.json
+    "${CMAKE_CURRENT_BINARY_DIR}/com_osvr_fove_eyetracker_json.h")
 	
-osvr_convert_json(com_osvr_FOVE_head_tracking_config_json
-    head_tracking_config.json
-    "${CMAKE_CURRENT_BINARY_DIR}/com_osvr_FOVE_head_tracking_config_json.h")
+osvr_convert_json(com_osvr_fove_tracker_json
+    com_osvr_fove_tracker.json
+    "${CMAKE_CURRENT_BINARY_DIR}/com_osvr_fove_tracker_json.h")
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 	
 # Generate OSVR plugin DLL
 osvr_add_plugin(NAME com_Sensics_FOVE SOURCES
 	com_osvr_fove.cpp
-	com_osvr_fove.h
-	"${CMAKE_CURRENT_BINARY_DIR}/com_osvr_FOVE_eye_tracking_config_json.h"
-	"${CMAKE_CURRENT_BINARY_DIR}/com_osvr_FOVE_head_tracking_config_json.h"
+	"${CMAKE_CURRENT_BINARY_DIR}/com_osvr_fove_eyetracker_json.h"
+	"${CMAKE_CURRENT_BINARY_DIR}/com_osvr_fove_tracker_json.h"
 )
-# set_target_properties(com_Sensics_FOVE 
-						# PROPERTIES 
-						# PROJECT_LABEL "Fove OSVR Plugin")
 
 target_link_libraries(com_Sensics_FOVE 
 						osvr::osvrUtilCpp
