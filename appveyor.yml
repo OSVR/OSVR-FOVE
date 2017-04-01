@@ -23,8 +23,9 @@ install:
   - ps: 7z x OSVR-Core-Snapshot-latest-*bit.7z
   - ps: move OSVR-Core-Snapshot-* c:\osvr
   - ps: Start-FileDownload "http://archive.getfove.com/developer/fove_sdk_0_11_4.zip"
-  - ps: 7z x fove_sdk_0_11_4.zip
-  - ps: move /Y fove_sdk_*\* c:\osvr\
+  - ps: mkdir fove_sdk
+  - ps: 7z x -y -o fove_sdk fove_sdk_0_11_4.zip
+  - ps: move /Y fove_sdk\* c:\osvr\
 
 
 # TODO set up cache for dependencies
