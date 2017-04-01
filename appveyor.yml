@@ -38,7 +38,7 @@ build_script:
   - git submodule update --init --recursive
   - mkdir build
   - cd build
-  - cmake .. -G "%GENERATOR%" -DCMAKE_INSTALL_PREFIX="c:\osvr" -DCMAKE_PREFIX_PATH="c:\osvr" -Dosvr_DIR="C:\osvr\lib\cmake\osvr"
+  - cmake .. -G "%GENERATOR%" -DCMAKE_INSTALL_PREFIX="c:\osvr" -DCMAKE_PREFIX_PATH="c:\osvr" -Dosvr_DIR="C:\osvr\lib\cmake\osvr" -DBOOST_ROOT="C:\Libraries\boost_1_60_0"
   - cmake --build . --config "%CONFIG%" --target install
   - ctest --build-config %CONFIG% --extra-verbose
 
