@@ -1,19 +1,44 @@
-#include <chrono>
-#include <memory>
-#include <thread>
-#include <utility>
+/** @file
+    @brief FOVE plugin for OSVR
 
-// OSVR Includes
+    @date 2017
+
+    @author
+    Sensics, Inc.
+    <http://sensics.com>
+ */
+
+// Copyright 2017 Sensics, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// Internal Includes
+#include "com_osvr_fove_eyetracker_json.h"
+#include "com_osvr_fove_tracker_json.h"
+
+// Library/third-party includes
 #include <osvr/PluginKit/EyeTrackerInterfaceC.h>
 #include <osvr/PluginKit/PluginKit.h>
 #include <osvr/PluginKit/TrackerInterfaceC.h>
 #include <osvr/Util/Logger.h>
-// Fove Includes
-#include "IFVRHeadset.h"
 
-// Import the json config files
-#include "com_osvr_fove_eyetracker_json.h"
-#include "com_osvr_fove_tracker_json.h"
+#include <IFVRHeadset.h>
+
+// Standard includes
+#include <chrono>
+#include <memory>
+#include <thread>
+#include <utility>
 
 namespace {
 OSVR_MessageType fovePluginMessage;
@@ -38,17 +63,17 @@ class HeadTrackerDevice {
         m_dev.registerUpdateCallback(this);
 
         // Get the a copy of headset pointer
-		m_headset = hset; 
-		
-		// make logger
-		m_logger = osvr::util::log::make_logger("OSVR-FOVE");
+        m_headset = hset;
+
+        // make logger
+        m_logger = osvr::util::log::make_logger("OSVR-FOVE");
     }
 
     OSVR_ReturnCode update() {
 
         // Ensure headset is valid
         if (!m_headset) {
-			m_logger->error("Headset is null, return from headTrack update");
+            m_logger->error("Headset is null, return from headTrack update");
             return OSVR_RETURN_FAILURE;
         }
 
@@ -61,14 +86,14 @@ class HeadTrackerDevice {
         OSVR_PoseState outPose;
         osvrPose3SetIdentity(&outPose);
 
-		osvrQuatSetW(&outPose.rotation, -pose.orientation.w);
-		osvrQuatSetX(&outPose.rotation, pose.orientation.x);
-		osvrQuatSetY(&outPose.rotation, pose.orientation.y);
-		osvrQuatSetZ(&outPose.rotation, -pose.orientation.z);
+        osvrQuatSetW(&outPose.rotation, -pose.orientation.w);
+        osvrQuatSetX(&outPose.rotation, pose.orientation.x);
+        osvrQuatSetY(&outPose.rotation, pose.orientation.y);
+        osvrQuatSetZ(&outPose.rotation, -pose.orientation.z);
 
-		osvrVec3SetX(&outPose.translation, pose.position.x);
-		osvrVec3SetY(&outPose.translation, pose.position.y);
-		osvrVec3SetZ(&outPose.translation, -pose.position.z); 
+        osvrVec3SetX(&outPose.translation, pose.position.x);
+        osvrVec3SetY(&outPose.translation, pose.position.y);
+        osvrVec3SetZ(&outPose.translation, -pose.position.z);
 
         osvrDeviceTrackerSendPoseTimestamped(m_dev, m_tracker, &outPose, 0,
                                              &timestamp);
@@ -80,7 +105,7 @@ class HeadTrackerDevice {
     osvr::pluginkit::DeviceToken m_dev;
     OSVR_TrackerDeviceInterface m_tracker;
     std::shared_ptr<Fove::IFVRHeadset> m_headset;
-	osvr::util::log::LoggerPtr m_logger;
+    osvr::util::log::LoggerPtr m_logger;
 };
 
 class EyeTrackerDevice {
@@ -103,17 +128,16 @@ class EyeTrackerDevice {
         m_dev.registerUpdateCallback(this);
 
         // Get the a copy of headset pointer
-		m_headset = hset;
+        m_headset = hset;
 
-		// make logger
-		m_logger = osvr::util::log::make_logger("OSVR-FOVE");
+        // make logger
+        m_logger = osvr::util::log::make_logger("OSVR-FOVE");
     }
 
     OSVR_ReturnCode update() {
-
         // Ensure headset is valid
         if (!m_headset) {
-			m_logger->error("Headset is null, return from eyeTrack update");
+            m_logger->error("Headset is null, return from eyeTrack update");
             return OSVR_RETURN_FAILURE;
         }
 
@@ -148,14 +172,15 @@ class EyeTrackerDevice {
   private:
     osvr::pluginkit::DeviceToken m_dev;
     OSVR_EyeTrackerDeviceInterface m_eyetracker;
-	std::shared_ptr<Fove::IFVRHeadset> m_headset;
-	osvr::util::log::LoggerPtr m_logger;
+    std::shared_ptr<Fove::IFVRHeadset> m_headset;
+    osvr::util::log::LoggerPtr m_logger;
 
 }; // class EyeTrackerDevice
 
 class HardwareDetection {
   public:
-	HardwareDetection() : m_found(false), m_logger(osvr::util::log::make_logger("OSVR-FOVE")) {}
+    HardwareDetection()
+        : m_found(false), m_logger(osvr::util::log::make_logger("OSVR-FOVE")) {}
 
     OSVR_ReturnCode operator()(OSVR_PluginRegContext ctx) {
         // if device was already detected, no need to go thru hardware detection
@@ -163,10 +188,11 @@ class HardwareDetection {
         if (m_found) {
             return OSVR_RETURN_SUCCESS;
         }
+
         // create headset
         m_headset.reset(Fove::GetFVRHeadset());
         if (!m_headset) {
-			m_logger->error("Unable to create headset");
+            m_logger->error("Unable to create headset");
             return OSVR_RETURN_FAILURE;
         }
 
@@ -181,15 +207,17 @@ class HardwareDetection {
         int count = 0;
         int maxcount = 5;
         while (!m_headset->IsHardwareConnected() && count < maxcount) {
-			m_logger->info("Waiting for hardware to be connected");
+            m_logger->info("Waiting for hardware to be connected");
             std::this_thread::sleep_for(std::chrono::milliseconds(200));
             count++;
         }
+
         if (count == maxcount) {
-			m_logger->error("Hardware not connecting after 5 try");
+            m_logger->error("Hardware not connecting after 5 try");
             return OSVR_RETURN_FAILURE;
         }
-		m_logger->info("Hardware detected");
+
+        m_logger->info("Hardware detected");
         m_found = true;
 
         // create head traker and eye traker
@@ -203,9 +231,10 @@ class HardwareDetection {
 
   private:
     bool m_found;
-	std::shared_ptr<Fove::IFVRHeadset> m_headset;
-	osvr::util::log::LoggerPtr m_logger;
+    std::shared_ptr<Fove::IFVRHeadset> m_headset;
+    osvr::util::log::LoggerPtr m_logger;
 };
+
 } // namespace
 
 OSVR_PLUGIN(com_osvr_fove) {
