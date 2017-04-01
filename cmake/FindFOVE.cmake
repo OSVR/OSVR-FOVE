@@ -27,23 +27,22 @@
 include(FindPackageHandleStandardArgs)
 
 find_library(FOVE_LIBRARY
-    NAMES
-    "FoveClient")
-    
+	NAMES
+	FoveClient)
+
 find_path(FOVE_INCLUDE_DIR
-        NAMES
-        "IFVRHeadset.h")
-    
+	NAMES
+	IFVRHeadset.h)
+
 find_package_handle_standard_args(FOVE FOUND_VAR FOVE_FOUND
-    REQUIRED_VARS
-    FOVE_INCLUDE_DIR
-    FOVE_LIBRARY)
-    
+	REQUIRED_VARS
+	FOVE_INCLUDE_DIR
+	FOVE_LIBRARY)
+
 if(FOVE_FOUND)
-    SET(FOVE_LIBRARIES 
-        ${FOVE_LIBRARY})
-    SET(FOVE_INCLUDE_DIRS 
-        ${FOVE_INCLUDE_DIR})
+	set(FOVE_LIBRARIES ${FOVE_LIBRARY})
+	set(FOVE_INCLUDE_DIRS ${FOVE_INCLUDE_DIR})
 endif()
 
 mark_as_advanced(FOVE_INCLUDE_DIR FOVE_LIBRARY)
+

@@ -14,15 +14,14 @@ find_package(osvr REQUIRED)
 find_package(FOVE REQUIRED)
 
 osvr_convert_json(com_osvr_fove_eyetracker_json
-    com_osvr_fove_eyetracker.json
-    "${CMAKE_CURRENT_BINARY_DIR}/com_osvr_fove_eyetracker_json.h")
-	
-osvr_convert_json(com_osvr_fove_tracker_json
-    com_osvr_fove_tracker.json
-    "${CMAKE_CURRENT_BINARY_DIR}/com_osvr_fove_tracker_json.h")
+	com_osvr_fove_eyetracker.json
+	"${CMAKE_CURRENT_BINARY_DIR}/com_osvr_fove_eyetracker_json.h")
 
-include_directories("${CMAKE_CURRENT_BINARY_DIR}")
-	
+osvr_convert_json(com_osvr_fove_tracker_json
+	com_osvr_fove_tracker.json
+	"${CMAKE_CURRENT_BINARY_DIR}/com_osvr_fove_tracker_json.h")
+
+
 # Generate OSVR plugin DLL
 osvr_add_plugin(NAME com_Sensics_FOVE SOURCES
 	com_osvr_fove.cpp
@@ -30,11 +29,30 @@ osvr_add_plugin(NAME com_Sensics_FOVE SOURCES
 	"${CMAKE_CURRENT_BINARY_DIR}/com_osvr_fove_tracker_json.h"
 )
 
-target_link_libraries(com_Sensics_FOVE 
-						osvr::osvrUtilCpp
-						osvr::osvrPluginKitCpp
-						${FOVE_LIBRARIES})
+target_link_libraries(com_Sensics_FOVE
+	osvr::osvrUtilCpp
+	osvr::osvrPluginKitCpp
+	${FOVE_LIBRARIES})
 
 target_include_directories(com_Sensics_FOVE
-							PUBLIC
-							${FOVE_INCLUDE_DIRS})
+	PUBLIC
+	${FOVE_INCLUDE_DIRS}
+	PRIVATE
+	${CMAKE_CURRENT_BINARY_DIR})
+
+include(GNUInstallDirs)
+if(NOT CMAKE_INSTALL_DOCDIR)
+	set(CMAKE_INSTALL_DOCDIR ${CMAKE_INSTALL_DATAROOTDIR}/doc/${PROJECT_NAME})
+endif()
+
+install(FILES
+	README.md
+	LICENSE
+	DESTINATION
+	${CMAKE_INSTALL_DOCDIR})
+
+install(FILES
+	displays/FOVE_0.json
+	DESTINATION
+	${OSVR_CONFIG_ROOT}/displays)
+
