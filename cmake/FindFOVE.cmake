@@ -30,13 +30,14 @@ find_library(FOVE_LIBRARY
 	NAMES
 	FoveClient
 	PATHS
-	${FOVE_ROOT_DIR})
+	${FOVE_ROOT_DIR}/bin
+	${FOVE_ROOT_DIR}/lib)
 
 find_path(FOVE_INCLUDE_DIR
 	NAMES
 	IFVRHeadset.h
 	PATHS
-	${FOVE_ROOT_DIR})
+	${FOVE_ROOT_DIR}/include)
 
 find_package_handle_standard_args(FOVE FOUND_VAR FOVE_FOUND
 	REQUIRED_VARS
